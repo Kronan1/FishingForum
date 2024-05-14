@@ -39,15 +39,15 @@ public class FishingForumContext : IdentityDbContext<FishingForumUser>
 
     public DbSet<FishingForum.Models.Category> Category { get; set; } = default!;
 
-public DbSet<FishingForum.Models.ForumPicture> ForumPicture { get; set; } = default!;
+    public DbSet<FishingForum.Models.ForumPicture> ForumPicture { get; set; } = default!;
 
-public DbSet<FishingForum.Models.SubCategory> SubCategory { get; set; } = default!;
+    public DbSet<FishingForum.Models.SubCategory> SubCategory { get; set; } = default!;
 
-public DbSet<FishingForum.Models.Thread> Thread { get; set; } = default!;
+    public DbSet<FishingForum.Models.Thread> Thread { get; set; } = default!;
 
-public DbSet<FishingForum.Models.Post> Post { get; set; } = default!;
+    public DbSet<FishingForum.Models.Post> Post { get; set; } = default!;
 
-public DbSet<FishingForum.Models.UserPicture> UserPicture { get; set; } = default!;
+    public DbSet<FishingForum.Models.UserPicture> UserPicture { get; set; } = default!;
 
-public DbSet<FishingForum.Models.PostUserPicture> PostUserPicture { get; set; } = default!;
+    public DbSet<FishingForum.Models.PostUserPicture> PostUserPicture { get; set; } = default!;
 }

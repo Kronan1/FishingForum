@@ -1,5 +1,6 @@
 ﻿using Azure;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FishingForum.Models
 {
@@ -24,6 +25,11 @@ namespace FishingForum.Models
 
         [StringLength(10)]
         public string FileType { get; set; }
+
+
+        [ForeignKey("FishingForumUser")]
+        public int UserId { get; set; }
+        public virtual Areas.Identity.Data.FishingForumUser CreatedBy { get; set; }
 
 
         public List<PostUserPicture> PostUserPictures { get; } = [];
