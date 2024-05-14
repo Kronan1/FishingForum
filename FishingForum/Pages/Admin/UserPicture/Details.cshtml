@@ -1,0 +1,55 @@
+﻿@page
+@model FishingForum.Pages.Admin.UserPicture.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>UserPicture</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserPicture.Width)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserPicture.Width)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserPicture.Height)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserPicture.Height)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserPicture.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserPicture.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserPicture.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserPicture.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserPicture.FileName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserPicture.FileName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserPicture.FileType)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserPicture.FileType)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.UserPicture.Id">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>

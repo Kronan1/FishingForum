@@ -1,0 +1,42 @@
+﻿@page
+@model FishingForum.Pages.Admin.PostUserPicture.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PostUserPicture[0].Post)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PostUserPicture[0].UserPicture)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.PostUserPicture) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Post.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserPicture.Id)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

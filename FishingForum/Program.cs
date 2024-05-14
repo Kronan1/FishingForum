@@ -1,0 +1,47 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using FishingForum.Data;
+using FishingForum.Areas.Identity.Data;
+namespace FishingForum
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
+            var connectionString = builder.Configuration.GetConnectionString("FishingForumContextConnection") ?? throw new InvalidOperationException("Connection string 'FishingForumContextConnection' not found.");
+
+            builder.Services.AddDbContext<FishingForumContext>(options => options.UseSqlServer(connectionString));
+
+            builder.Services.AddDefaultIdentity<FishingForumUser>(options =>
+            options.SignIn.RequireConfirmedAccount = false)
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<FishingForumContext>();
+
+            // Add services to the container.
+            builder.Services.AddRazorPages();
+
+            var app = builder.Build();
+
+            // Configure the HTTP request pipeline.
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseExceptionHandler("/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
+
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
+            app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.MapRazorPages();
+
+            app.Run();
+        }
+    }
+}
