@@ -1,0 +1,62 @@
+﻿@page
+@model FishingForum.Pages.EditSubCategoryModel
+@{
+}
+
+
+<h1 class="text-md-center">Update Subcategory</h1>
+
+@if (Model.ErrorMessage != string.Empty)
+{
+    <h3 class="text-danger">@Model.ErrorMessage</h3>
+}
+
+
+@if (Model.SubCategory != null)
+{
+
+    <form method="post">
+        <input type="hidden" asp-for="UpdatedSubCategory.Id" />
+        <table class="table">
+            <tr class="text-primary">
+                <th>Name</th>
+                <th>Category</th>
+            </tr>
+
+            <tr>
+                <td>
+                    <input asp-for="UpdatedSubCategory.Name" class="form-control" />
+                </td>
+                <br />
+                <td>@Model.Category.Name</td>
+            </tr>
+            <tr>
+                <td>
+                    <select asp-for="UpdatedSubCategory.CategoryId" class="form-control" asp-items="@Model.CategorySelectList">
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a asp-page="./EditCategory" asp-route-id="@Model.Category.Id" class="btn btn-secondary">Cancel</a>
+                </td>
+            </tr>
+
+        </table>
+    </form>
+
+}
+
+
+@*
+<form method="post">
+
+    <label asp-for="NewSubCategoryName">New Name </label>
+    <input asp-for="NewSubCategoryName" />
+    <span asp-validation-for="NewSubCategoryName" class="text-danger"></span>
+
+    <input type="submit" value=" Change Name" />
+
+</form> *@
+

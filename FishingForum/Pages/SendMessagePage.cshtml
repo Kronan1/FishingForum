@@ -1,0 +1,22 @@
+﻿@page
+@model FishingForum.Pages.SendMessagePageModel
+@{
+}
+<p>Message to @Model.RecieverAlias</p>
+
+<form method="post">
+    <input type="hidden" asp-for="RecieverId" />
+    <table class="table">
+        <tr class="text-primary">
+            <div class="form-group">
+                <textarea asp-for="NewMessage" class="form-control row" rows="5"></textarea>
+                <span asp-validation-for="NewMessage" class="text-danger"></span>
+            </div>
+        </tr>
+        <tr>
+            <td colspan="2" class="text-end">
+                <button type="submit" class="btn btn-primary">Send</button>
+            </td>
+        </tr>
+    </table>
+</form>

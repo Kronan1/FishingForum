@@ -1,0 +1,32 @@
+﻿@page
+@model AdminModel
+@{
+}
+
+<a asp-route-seeReported="@true">Reported messages</a>
+
+<table class="table">
+    <tr class="text-primary"><td>Categories</td></tr>
+    @foreach (var category in Model.Categories)
+    {
+        <tr> 
+            <td>@category.Name</td>
+            <td><a asp-route-editCategoryId="@category.Id" class="text-warning">Edit</a></td>
+            <td><a asp-route-deleteCategoryId="@category.Id" class="text-danger">Remove</a></td>
+        </tr>
+    }
+
+    
+</table>
+
+
+
+<form method="post"> 
+    <label asp-for="NewCategory.Name">Name</label>
+    <input asp-for="NewCategory.Name" />
+    <span asp-validation-for="NewCategory.Name" class="text-danger"></span>
+    
+    <input type="submit" value="Add Category" />
+</form>
+
+

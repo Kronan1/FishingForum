@@ -1,0 +1,17 @@
+﻿@page
+@model FishingForum.Pages.MessagePageModel
+@{
+}
+
+<table>
+    @foreach (var message in Model.Messages)
+    {
+        <tr>
+            <td>@message.Text</td>
+            <td>@Model.AnonymizedUsers.FirstOrDefault(u => u.Id == message.SenderId).Alias</td>
+            <td>@message.DateCreated</td>
+            <td><a asp-route-senderId="@message.SenderId">Reply</a></td>
+            <td><a asp-route-deleteId="@message.Id">Delete</a></td>
+        </tr>
+    }
+</table>

@@ -15,11 +15,6 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Post.Id" />
             <div class="form-group">
-                <label asp-for="Post.Title" class="control-label"></label>
-                <input asp-for="Post.Title" class="form-control" />
-                <span asp-validation-for="Post.Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Post.DateCreated" class="control-label"></label>
                 <input asp-for="Post.DateCreated" class="form-control" />
                 <span asp-validation-for="Post.DateCreated" class="text-danger"></span>
@@ -36,8 +31,13 @@
             </div>
             <div class="form-group">
                 <label asp-for="Post.UserId" class="control-label"></label>
-                <input asp-for="Post.UserId" class="form-control" />
+                <select asp-for="Post.UserId" class="form-control" asp-items="ViewBag.UserId"></select>
                 <span asp-validation-for="Post.UserId" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Post.Reported" /> @Html.DisplayNameFor(model => model.Post.Reported)
+                </label>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

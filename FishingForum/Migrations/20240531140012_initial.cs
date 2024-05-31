@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FishingForum.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,6 +30,7 @@ namespace FishingForum.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Alias = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -82,20 +83,18 @@ namespace FishingForum.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserPicture",
+                name: "Message",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Width = table.Column<int>(type: "int", nullable: false),
-                    Height = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    FileName = table.Column<string>(type: "nvarchar(36)", maxLength: 36, nullable: false),
-                    FileType = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false)
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SenderId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RecieverId = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserPicture", x => x.Id);
+                    table.PrimaryKey("PK_Message", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -205,6 +204,30 @@ namespace FishingForum.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserPicture",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Width = table.Column<int>(type: "int", nullable: false),
+                    Height = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    FileName = table.Column<string>(type: "nvarchar(36)", maxLength: 36, nullable: false),
+                    FileType = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserPicture", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserPicture_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SubCategory",
                 columns: table => new
                 {
@@ -231,18 +254,18 @@ namespace FishingForum.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SubCategoryId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    CreatedById = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Thread", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Thread_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
+                        name: "FK_Thread_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Thread_SubCategory_SubCategoryId",
                         column: x => x.SubCategoryId,
@@ -256,27 +279,25 @@ namespace FishingForum.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ThreadId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    CreatedById = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Reported = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Post", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Post_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
+                        name: "FK_Post_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Post_Thread_ThreadId",
                         column: x => x.ThreadId,
                         principalTable: "Thread",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -343,14 +364,14 @@ namespace FishingForum.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Post_CreatedById",
-                table: "Post",
-                column: "CreatedById");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Post_ThreadId",
                 table: "Post",
                 column: "ThreadId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Post_UserId",
+                table: "Post",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PostUserPicture_UserPictureId",
@@ -363,14 +384,19 @@ namespace FishingForum.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Thread_CreatedById",
-                table: "Thread",
-                column: "CreatedById");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Thread_SubCategoryId",
                 table: "Thread",
                 column: "SubCategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Thread_UserId",
+                table: "Thread",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserPicture_UserId",
+                table: "UserPicture",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -393,6 +419,9 @@ namespace FishingForum.Migrations
 
             migrationBuilder.DropTable(
                 name: "ForumPicture");
+
+            migrationBuilder.DropTable(
+                name: "Message");
 
             migrationBuilder.DropTable(
                 name: "PostUserPicture");

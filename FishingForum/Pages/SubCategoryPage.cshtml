@@ -1,0 +1,27 @@
+﻿@page
+@model FishingForum.Pages.SubCategoryPageModel
+@{
+}
+
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Areas.Identity.Data.FishingForumUser> SignInManager
+@inject UserManager<Areas.Identity.Data.FishingForumUser> UserManager
+
+<div class="text-center">
+    <h1 class="display-4">@Model.SubCategory.Name</h1>
+</div>
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <h3><a asp-route-createthreadId="@Model.SubCategory.Id">New Thread</a></h3>
+}
+
+<table>
+    @foreach (var thread in Model.Threads)
+    {
+        <tr>
+            <td><a asp-route-threadId="@thread.Id"> @thread.Title</a></td>
+        </tr>
+
+    }
+</table>

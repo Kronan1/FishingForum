@@ -1,0 +1,59 @@
+﻿@page
+@model FishingForum.Pages.ThreadPageModel
+@{
+} 
+
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Areas.Identity.Data.FishingForumUser> SignInManager
+@inject UserManager<Areas.Identity.Data.FishingForumUser> UserManager
+
+<div class="text-center">
+    <h1 class="display-6">@Model.Thread.Title</h1>
+</div>
+
+@if (Model.Reported)
+{
+    <div class="text-center">
+        <p class="h6 text-danger">Report sent</p>
+    </div>
+}
+
+
+<table>
+    @foreach (var post in Model.Posts)
+    {
+        <tr>
+            
+            <td>@post.Text</td>
+            <td>@Model.AnonymizedUsers.FirstOrDefault(u => u.Id == post.UserId).Alias</td>
+            <td>@post.DateCreated</td>
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <td><a asp-route-postId="@post.Id">Reply</a></td>
+                <td><a asp-route-reportId="@post.Id">Report</a></td>
+            }
+        </tr>
+
+    }
+</table>
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <br />
+    <form method="post">
+        <input type="hidden" asp-for="ThreadId" />
+        <table class="table">
+            <tr class="text-primary">
+                <div class="form-group">
+                    <textarea asp-for="NewPost" class="form-control row" rows="5"></textarea>
+                    <span asp-validation-for="NewPost" class="text-danger"></span>
+                </div>
+            </tr>
+            <tr>
+                <td colspan="2"  class="text-end">
+                    <button type="submit" class="btn btn-primary">Post Reply</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+}

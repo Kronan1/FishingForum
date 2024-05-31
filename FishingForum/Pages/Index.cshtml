@@ -5,6 +5,26 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">FiskeForum</h1>
 </div>
+
+
+@foreach (var category in Model.Categories)
+{
+    <table>
+        <tr class="d-lg-table-row">
+            <th>@category.Name</th>
+        </tr>
+        @foreach (var subCategory in Model.SubCategories)
+        {
+            @if (subCategory.CategoryId == category.Id)
+            {
+                <tr>
+                    <td><a asp-route-subCategoryId="@subCategory.Id"> @subCategory.Name</a></td>
+                </tr>
+            }
+        }
+    </table>
+}
+
+

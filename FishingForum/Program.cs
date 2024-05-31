@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using FishingForum.Data;
 using FishingForum.Areas.Identity.Data;
+using FishingForum.DAL;
 namespace FishingForum
 {
     public class Program
@@ -16,7 +17,14 @@ namespace FishingForum
             builder.Services.AddDefaultIdentity<FishingForumUser>(options =>
             options.SignIn.RequireConfirmedAccount = false)
                 .AddRoles<IdentityRole>()
+                .AddSignInManager<SignInManager<FishingForumUser>>()
                 .AddEntityFrameworkStores<FishingForumContext>();
+
+
+
+
+            builder.Services.AddScoped<AdminManager>();
+            builder.Services.AddScoped<UserManager>();
 
             // Add services to the container.
             builder.Services.AddRazorPages();

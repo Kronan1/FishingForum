@@ -28,11 +28,11 @@ namespace FishingForum.Models
 
 
         [ForeignKey("FishingForumUser")]
-        public int UserId { get; set; }
-        public virtual Areas.Identity.Data.FishingForumUser CreatedBy { get; set; }
+        public string UserId { get; set; }
+        public virtual Areas.Identity.Data.FishingForumUser FishingForumUser { get; set; }
 
 
-        public List<PostUserPicture> PostUserPictures { get; } = [];
+        public List<PostUserPicture> PostUserPictures { get; }
 
     }
 }

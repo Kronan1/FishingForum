@@ -14,9 +14,6 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Post[0].Title)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Post[0].DateCreated)
             </th>
             <th>
@@ -26,7 +23,10 @@
                 @Html.DisplayNameFor(model => model.Post[0].Thread)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Post[0].UserId)
+                @Html.DisplayNameFor(model => model.Post[0].FishingForumUser)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Post[0].Reported)
             </th>
             <th></th>
         </tr>
@@ -35,19 +35,19 @@
 @foreach (var item in Model.Post) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.DateCreated)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Text)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Thread.Id)
+                @Html.DisplayFor(modelItem => item.Thread.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.UserId)
+                @Html.DisplayFor(modelItem => item.FishingForumUser.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Reported)
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |

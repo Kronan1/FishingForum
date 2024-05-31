@@ -13,12 +13,6 @@
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Post.Title)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Post.Title)
-        </dd>
-        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Post.DateCreated)
         </dt>
         <dd class="col-sm-10">
@@ -34,13 +28,19 @@
             @Html.DisplayNameFor(model => model.Post.Thread)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Post.Thread.Id)
+            @Html.DisplayFor(model => model.Post.Thread.Title)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Post.UserId)
+            @Html.DisplayNameFor(model => model.Post.FishingForumUser)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Post.UserId)
+            @Html.DisplayFor(model => model.Post.FishingForumUser.Id)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Post.Reported)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Post.Reported)
         </dd>
     </dl>
     

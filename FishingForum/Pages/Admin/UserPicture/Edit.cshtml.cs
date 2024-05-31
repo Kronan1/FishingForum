@@ -36,6 +36,7 @@ namespace FishingForum.Pages.Admin.UserPicture
                 return NotFound();
             }
             UserPicture = userpicture;
+           ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
             return Page();
         }
 

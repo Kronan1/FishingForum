@@ -23,7 +23,8 @@ namespace FishingForum.Pages.Admin.UserPicture
 
         public async Task OnGetAsync()
         {
-            UserPicture = await _context.UserPicture.ToListAsync();
+            UserPicture = await _context.UserPicture
+                .Include(u => u.FishingForumUser).ToListAsync();
         }
     }
 }

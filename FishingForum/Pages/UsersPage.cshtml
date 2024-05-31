@@ -1,0 +1,29 @@
+﻿@page
+@model FishingForum.Pages.UsersPageModel
+@{
+}
+
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Areas.Identity.Data.FishingForumUser> SignInManager
+@inject UserManager<Areas.Identity.Data.FishingForumUser> UserManager
+
+<div class="text-center">
+    <h1 class="display-6">Members</h1>
+</div>
+
+
+
+<table>
+    @foreach (var user in Model.AnonymizedUsers)
+    {
+        <tr>
+
+            <td>@user.Alias</td>
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <td><a asp-route-userId="@user.Id">PM</a></td>
+            }
+        </tr>
+
+    }
+</table>

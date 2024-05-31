@@ -21,7 +21,8 @@ namespace FishingForum.Pages.Admin.Post
 
         public IActionResult OnGet()
         {
-        ViewData["ThreadId"] = new SelectList(_context.Thread, "Id", "Id");
+        ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
+        ViewData["ThreadId"] = new SelectList(_context.Thread, "Id", "Title");
             return Page();
         }
 

@@ -21,7 +21,7 @@ namespace FishingForum.Pages.Admin.Thread
 
         public IActionResult OnGet()
         {
-        ViewData["SubCategoryId"] = new SelectList(_context.SubCategory, "Id", "Id");
+        ViewData["SubCategoryId"] = new SelectList(_context.SubCategory, "Id", "Name");
             return Page();
         }
 

@@ -1,0 +1,28 @@
+﻿@page
+@model FishingForum.Pages.CreateThreadModel
+@{
+}
+
+@if (Model.ErrorMessage != string.Empty)
+{
+    <h3 class="text-danger">@Model.ErrorMessage</h3>
+}
+
+<form method="post">
+    <input type="hidden" asp-for="SubCategoryId" />
+    <div class="form-group">
+    <label asp-for="NewThread.Title" class="control-label" >Title</label>
+    <input asp-for="NewThread.Title" class="form-control" />
+    <span asp-validation-for="NewThread.Title" class="text-danger"></span>
+    </div>
+    <br />
+
+    <div class="form-group">
+        <label asp-for="NewPost.Text" class="control-label">Text</label>
+        <textarea asp-for="NewPost.Text" class="form-control row" rows="20"></textarea>
+        <span asp-validation-for="NewPost.Text" class="text-danger"></span>
+    </div>
+    <br />
+
+    <input type="submit" value="Create"/>
+</form>

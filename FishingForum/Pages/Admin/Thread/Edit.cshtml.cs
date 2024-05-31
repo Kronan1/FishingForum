@@ -36,7 +36,7 @@ namespace FishingForum.Pages.Admin.Thread
                 return NotFound();
             }
             Thread = thread;
-           ViewData["SubCategoryId"] = new SelectList(_context.SubCategory, "Id", "Id");
+           ViewData["SubCategoryId"] = new SelectList(_context.SubCategory, "Id", "Name");
             return Page();
         }
 

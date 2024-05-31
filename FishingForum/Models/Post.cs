@@ -6,8 +6,8 @@ namespace FishingForum.Models
     public class Post
     {
         public Guid Id { get; set; }
-        public string Title { get; set; }
         public DateTime DateCreated { get; set; }
+        [Required]
         public string Text { get; set; }
 
         
@@ -17,11 +17,13 @@ namespace FishingForum.Models
 
 
         [ForeignKey("FishingForumUser")]
-        public int UserId { get; set; }
-        public virtual Areas.Identity.Data.FishingForumUser CreatedBy { get; set; }
+        public string UserId { get; set; }
+        public virtual Areas.Identity.Data.FishingForumUser FishingForumUser { get; set; }
 
 
-        public List<PostUserPicture> PostUserPictures { get; } = [];
+        public List<PostUserPicture> PostUserPictures { get; }
+
+        public bool Reported { get; set; } = false;
 
     }
 }

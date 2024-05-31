@@ -24,6 +24,7 @@ namespace FishingForum.Pages.Admin.Post
         public async Task OnGetAsync()
         {
             Post = await _context.Post
+                .Include(p => p.FishingForumUser)
                 .Include(p => p.Thread).ToListAsync();
         }
     }

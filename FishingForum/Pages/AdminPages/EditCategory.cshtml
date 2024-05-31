@@ -1,0 +1,35 @@
+﻿@page
+@model FishingForum.Pages.EditCategoryModel
+@{
+}
+
+
+@if (Model.SubCategories != null)
+{
+
+
+    <table class="table">
+        <tr><h1 class="text-primary">@Model.Category.Name</h1></tr>
+        @foreach (var subCategory in Model.SubCategories)
+        {
+            <tr>
+                <td>@subCategory.Name</td>
+                <td><a asp-route-editSubCategoryId="@subCategory.Id" class="text-warning">Edit</a></td>
+                <td><a asp-route-deleteSubCategoryId="@subCategory.Id" class="text-danger">Remove</a></td>
+            </tr>
+        }
+
+
+    </table>
+
+}
+
+
+
+<form method="post">
+    <label asp-for="NewSubCategory.Name">Name</label>
+    <input asp-for="NewSubCategory.Name" />
+    <span asp-validation-for="NewSubCategory.Name" class="text-danger"></span>
+
+    <input type="submit" value="Add SubCategory" />
+</form>
