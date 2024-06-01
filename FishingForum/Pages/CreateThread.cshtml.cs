@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using FishingForum.Areas.Identity.Data;
 
+
 namespace FishingForum.Pages
 {
     public class CreateThreadModel : PageModel
@@ -111,9 +112,10 @@ namespace FishingForum.Pages
             NewPost.ThreadId = createdThread.Id;
 
             await _userManager.CreatePostAsync(NewPost);
-            
+
+
             // TODO Return to created post
-            return Page();
+            return RedirectToPage("/ThreadPage", new { threadId = createdThread.Id });
         }
 
 

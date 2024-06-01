@@ -1,7 +1,9 @@
 ﻿@page
 @model FishingForum.Pages.ThreadPageModel
 @{
-} 
+}
+
+<link rel="stylesheet" href="~/css/site.css">
 
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<Areas.Identity.Data.FishingForumUser> SignInManager
@@ -19,13 +21,39 @@
 }
 
 
+@foreach (var post in Model.Posts)
+{
+    <div class="card">
+        <div class="d-flex align-items-center">
+            <div class="postUser card-body border-end">@Model.AnonymizedUsers.FirstOrDefault(u => u.Id == post.UserId).Alias</div>
+            <div class="postText card-body ">@post.Text</div>
+        </div>
+
+
+        <div class="postFooter d-flex justify-content-between align-items-center card-footer">
+            @post.DateCreated
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <div class="d-flex ms-auto">
+                    <div class="card-link"><a asp-route-postId="@post.Id">Reply</a></div>
+                    <div class="card-link"><a asp-route-reportId="@post.Id">Report</a></div>
+                </div>
+            }
+        </div>
+
+    </div>
+}
+
+
 <table>
     @foreach (var post in Model.Posts)
     {
         <tr>
-            
-            <td>@post.Text</td>
             <td>@Model.AnonymizedUsers.FirstOrDefault(u => u.Id == post.UserId).Alias</td>
+            <td>@post.Text</td>
+        </tr>
+        <tr>
+
             <td>@post.DateCreated</td>
             @if (SignInManager.IsSignedIn(User))
             {
@@ -50,7 +78,7 @@
                 </div>
             </tr>
             <tr>
-                <td colspan="2"  class="text-end">
+                <td colspan="2" class="text-end">
                     <button type="submit" class="btn btn-primary">Post Reply</button>
                 </td>
             </tr>

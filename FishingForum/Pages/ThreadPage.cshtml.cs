@@ -99,7 +99,7 @@ namespace FishingForum.Pages
                     return NotFound("User Id not found");
                 }
 
-                _userManager.CreatePostAsync(post);
+                await _userManager.CreatePostAsync(post);
             }
             return RedirectToPage("/ThreadPage", new { threadId = ThreadId });
         }

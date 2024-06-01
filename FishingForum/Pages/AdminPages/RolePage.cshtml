@@ -1,0 +1,31 @@
+﻿@page
+@model FishingForum.Pages.AdminPages.RolePageModel
+@{
+}
+
+<table class="table">
+    <tr>
+
+        <th>Username</th>
+        @foreach (var role in Model.Roles)
+        {
+            <th>@role.Name</th>
+        }
+
+    </tr>
+
+    @foreach (var user in Model.Users)
+    {
+        <tr>
+            <td>@user.Alias</td>
+            <td></td>
+        </tr>
+    }
+</table>
+
+
+<form method="post">
+    <label for="RoleName">Ny roll</label>
+    <input name="RoleName" id="RoleName" />
+    <input type="submit" value="Skapa ny roll" />
+</form>
