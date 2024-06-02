@@ -3,6 +3,7 @@
 #nullable disable
 
 using System;
+using FishingForum.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace  FishingForum.Areas.Identity.Pages.Account.Manage
@@ -61,6 +62,8 @@ namespace  FishingForum.Areas.Identity.Pages.Account.Manage
         /// </summary>
         public static string TwoFactorAuthentication => "TwoFactorAuthentication";
 
+        public static string ProfilePicture => "ProfilePicture";
+
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
@@ -102,6 +105,9 @@ namespace  FishingForum.Areas.Identity.Pages.Account.Manage
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         public static string PersonalDataNavClass(ViewContext viewContext) => PageNavClass(viewContext, PersonalData);
+
+        // My Added NavClass
+        public static string ProfilePictureNavClass(ViewContext viewContext) => PageNavClass(viewContext, ProfilePicture);
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used

@@ -45,7 +45,7 @@ namespace FishingForum.Pages
                 var subCategory = await _adminManager.GetSubCategoryAsync(deleteSubCategoryId);
                 var categoryId = subCategory.CategoryId;
 
-                if (categoryId == null)
+                if (categoryId == 0)
                 {
                     return NotFound("Category not found");
                 }

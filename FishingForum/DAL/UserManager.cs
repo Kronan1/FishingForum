@@ -181,5 +181,11 @@ namespace FishingForum.DAL
                 _context.SaveChanges();
             }
         }
+
+        public async Task UploadProfilePictureAsync(ProfilePicture profilePicture)
+        {
+            _context.ProfilePicture.Add(profilePicture);
+            await _context.SaveChangesAsync();
+        }
     }
 }
