@@ -25,7 +25,10 @@
 {
     <div class="card">
         <div class="d-flex align-items-center">
-            <div class="postUser card-body border-end">@Model.AnonymizedUsers.FirstOrDefault(u => u.Id == post.UserId).Alias</div>
+            <div class="postUser card-body border-end">
+            <div><img src="@Model.AnonymizedUsers.FirstOrDefault(u => u.Id == post.UserId).ProfilePicture" alt="Profile Picture" /></div>
+            <div>@Model.AnonymizedUsers.FirstOrDefault(u => u.Id == post.UserId).Alias</div>
+            </div>
             <div class="postText card-body ">@post.Text</div>
         </div>
 
@@ -35,7 +38,7 @@
             @if (SignInManager.IsSignedIn(User))
             {
                 <div class="d-flex ms-auto">
-                    <div class="card-link"><a asp-route-postId="@post.Id">Reply</a></div>
+                    <div class="card-link"><a asp-route-postId="@post.Id">Quote</a></div>
                     <div class="card-link"><a asp-route-reportId="@post.Id">Report</a></div>
                 </div>
             }
@@ -45,25 +48,6 @@
 }
 
 
-@* <table>
-    @foreach (var post in Model.Posts)
-    {
-        <tr>
-            <td>@Model.AnonymizedUsers.FirstOrDefault(u => u.Id == post.UserId).Alias</td>
-            <td>@post.Text</td>
-        </tr>
-        <tr>
-
-            <td>@post.DateCreated</td>
-            @if (SignInManager.IsSignedIn(User))
-            {
-                <td><a asp-route-postId="@post.Id">Reply</a></td>
-                <td><a asp-route-reportId="@post.Id">Report</a></td>
-            }
-        </tr>
-
-    }
-</table> *@
 
 @if (SignInManager.IsSignedIn(User))
 {

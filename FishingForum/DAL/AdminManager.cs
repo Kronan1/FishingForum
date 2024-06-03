@@ -8,7 +8,7 @@ namespace FishingForum.DAL
 {
     public class AdminManager : UserManager
     {
-        public AdminManager(FishingForumContext context, ILogger<UserManager> logger) : base(context, logger)
+        public AdminManager(FishingForumContext context, ILogger<UserManager> logger, HttpClient httpClient) : base(context, logger, httpClient)
         {
 
         }

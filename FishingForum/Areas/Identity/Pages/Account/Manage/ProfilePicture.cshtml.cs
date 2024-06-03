@@ -19,6 +19,7 @@ namespace FishingForum.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<FishingForumUser> _userManagerIdentity;
         private readonly DAL.UserManager _userManager;
+        private readonly IWebHostEnvironment _environment;
 
         [Required]
         [BindProperty]
@@ -26,10 +27,13 @@ namespace FishingForum.Areas.Identity.Pages.Account.Manage
 
         public bool UploadSuccess { get; set; }
 
-        public ProfilePictureModel(UserManager<FishingForumUser> userManagerIdentity, DAL.UserManager userManager)
+        public string ImgUrl { get; set; }
+
+        public ProfilePictureModel(IWebHostEnvironment environment, UserManager<FishingForumUser> userManagerIdentity, DAL.UserManager userManager)
         {
             _userManagerIdentity = userManagerIdentity;
             _userManager = userManager;
+            _environment = environment;
 
         }
 
@@ -42,6 +46,13 @@ namespace FishingForum.Areas.Identity.Pages.Account.Manage
         {
             // Check file extension
             var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError(string.Empty, "Image not found");
+                return Page();
+            }
+
             var extension = Path.GetExtension(UploadedFile.FileName).ToLowerInvariant();
             if (!allowedExtensions.Contains(extension))
             {
@@ -81,6 +92,8 @@ namespace FishingForum.Areas.Identity.Pages.Account.Manage
 
             }
 
+
+
             var profilePicture = new ProfilePicture { FileName = id + extension,
             FileType = extension,
             UserId = userId,
@@ -88,22 +101,30 @@ namespace FishingForum.Areas.Identity.Pages.Account.Manage
             Height = height,
             Width = width};
 
-            await _userManager.UploadProfilePictureAsync(profilePicture);
-
-            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+            var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads");
 
             var filePath = Path.Combine(uploadsFolder, profilePicture.FileName);
 
+            var filePathToSave = "/uploads/" + profilePicture.FileName;
+
+            profilePicture.FilePath = filePathToSave;
+
+            await _userManager.UploadProfilePictureAsync(profilePicture, userId, uploadsFolder);
+
+            
+
             ScaleImage(UploadedFile, filePath);
 
-            //using (var fileStream = new FileStream(filePath, FileMode.Create))
-            //{
-            //    await UploadedFile.CopyToAsync(fileStream);
-            //}
+            var profilePicturePath = await _userManager.GetProfilePicturePathAsync(userId);
 
+            if (string.IsNullOrEmpty(profilePicturePath))
+            {
+                ModelState.AddModelError(string.Empty, "Could not retrieve Profile Picture");
+                return Page();
 
+            }
 
-
+            ImgUrl = profilePicturePath;
 
             UploadSuccess = true;
 
@@ -130,11 +151,10 @@ namespace FishingForum.Areas.Identity.Pages.Account.Manage
 
         public void ScaleImage(IFormFile imageFile, string filePath)
         {
-            FormFile formFileToReturn;
             using (var image = SixLabors.ImageSharp.Image.Load(UploadedFile.OpenReadStream()))
             {
-                int maxWidth = 100;
-                int maxHeight = 100;
+                int maxWidth = 150;
+                int maxHeight = 150;
                 var newWidth = image.Width;
                 var newHeight = image.Height;
 
@@ -162,20 +182,10 @@ namespace FishingForum.Areas.Identity.Pages.Account.Manage
 
                     image.Save(memoryStream, encoder);
 
-                    //// Create a new MemoryStream from the resized image data
-                    //using (var resizedMemoryStream = new MemoryStream(memoryStream.ToArray()))
-                    //{
-                    //    // Reset the position of the memory stream to the beginning
-                    //    resizedMemoryStream.Seek(0, SeekOrigin.Begin);
-
-                    //    // Create a new FormFile object from the resized memory stream
-                    //    formFileToReturn = new FormFile(resizedMemoryStream, 0, resizedMemoryStream.Length, "ResizedImage", UploadedFile.FileName);
-
                         using (var outputStream = System.IO.File.OpenWrite(filePath))
                         {
                             image.Save(outputStream, encoder);
                         }
-                    //}
                 }
             }
           

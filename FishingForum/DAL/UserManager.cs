@@ -3,6 +3,9 @@ using FishingForum.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace FishingForum.DAL
 {
@@ -10,12 +13,14 @@ namespace FishingForum.DAL
     {
         protected readonly FishingForumContext _context;
         protected readonly ILogger<UserManager> _logger;
+        private readonly HttpClient _httpClient;
 
 
-        public UserManager(Data.FishingForumContext context, ILogger<UserManager> logger)
+        public UserManager(Data.FishingForumContext context, ILogger<UserManager> logger, HttpClient httpClient)
         {
             _context = context;
             _logger = logger;
+            _httpClient = httpClient;
         }
 
 
@@ -32,6 +37,20 @@ namespace FishingForum.DAL
                 // Handle case where database connection is not available
                 throw new Exception("Database connection is not available.");
             }
+        }
+
+        public async Task<List<Category>> GetCategoriesFromApiAsync()
+        {
+            List<Category> Data = new();
+            var apiUrl = "https://fishingforumapi.azurewebsites.net/api/Category";
+            var response = await _httpClient.GetAsync(apiUrl);
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                Data = JsonConvert.DeserializeObject<List<Category>>(json);
+            }
+
+            return Data;
         }
 
         public async Task<Category> GetCategoryAsync(int id)
@@ -99,6 +118,97 @@ namespace FishingForum.DAL
 
         public async Task CreatePostAsync(Post post)
         {
+            List<string> badWords = new List<string>()
+            {
+                "anal",
+                "anus",
+                "arse",
+                "ass",
+                "ballsack",
+                "balls",
+                "bastard",
+                "bitch",
+                "biatch",
+                "bloody",
+                "blowjob",
+                "blow job",
+                "bollock",
+                "bollok",
+                "boner",
+                "boob",
+                "bugger",
+                "bum",
+                "butt",
+                "buttplug",
+                "clitoris",
+                "cock",
+                "coon",
+                "crap",
+                "cunt",
+                "damn",
+                "dick",
+                "dildo",
+                "dyke",
+                "fag",
+                "feck",
+                "fellate",
+                "fellatio",
+                "felching",
+                "fuck",
+                "f u c k",
+                "fudgepacker",
+                "fudge packer",
+                "flange",
+                "Goddamn",
+                "God damn",
+                "hell",
+                "homo",
+                "jerk",
+                "jizz",
+                "knobend",
+                "knob end",
+                "labia",
+                "lmao",
+                "lmfao",
+                "muff",
+                "nigger",
+                "nigga",
+                "omg",
+                "penis",
+                "piss",
+                "poop",
+                "prick",
+                "pube",
+                "pussy",
+                "queer",
+                "scrotum",
+                "sex",
+                "shit",
+                "s hit",
+                "sh1t",
+                "slut",
+                "smegma",
+                "spunk",
+                "tit",
+                "tosser",
+                "turd",
+                "twat",
+                "vagina",
+                "wank",
+                "whore",
+                "wtf",
+                "hora",
+                "fitta"
+            };
+
+            // Create a regular expression pattern to match any of the bad words
+            string pattern = @"\b(" + string.Join("|", badWords.Select(Regex.Escape).ToArray()) + @")\b";
+
+            var input = post.Text;
+
+            // Replace bad words with asterisks
+            post.Text = Regex.Replace(input, pattern, match => new string('*', match.Length), RegexOptions.IgnoreCase);
+
             _context.Post.Add(post);
             await _context.SaveChangesAsync();
         }
@@ -121,9 +231,22 @@ namespace FishingForum.DAL
             foreach (var userId in userIdList)
             {
                 var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userId);
+
+
                 if (user != null)
                 {
-                    users.Add(new AnonymizedUser { Id = user.Id, Alias = user.Alias });
+
+                    var profilePicture = await _context.ProfilePicture.SingleOrDefaultAsync(u => u.UserId == userId);
+                    string profilePicureFilepath = string.Empty;
+
+                    if (profilePicture != null)
+                    {
+
+                        profilePicureFilepath = profilePicture.FilePath;
+
+                    }
+
+                    users.Add(new AnonymizedUser { Id = user.Id, Alias = user.Alias, ProfilePicture = profilePicureFilepath });
                 }
             }
 
@@ -134,7 +257,17 @@ namespace FishingForum.DAL
         {
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userId);
 
-            return new AnonymizedUser { Id = user.Id, Alias = user.Alias };
+            var profilePicture = await _context.ProfilePicture.SingleOrDefaultAsync(u => u.UserId == userId);
+            string profilePicureFilepath = string.Empty;
+
+            if (profilePicture != null)
+            {
+
+                profilePicureFilepath = profilePicture.FilePath;
+
+            }
+
+            return new AnonymizedUser { Id = user.Id, Alias = user.Alias, ProfilePicture = profilePicureFilepath };
 
         }
 
@@ -182,10 +315,37 @@ namespace FishingForum.DAL
             }
         }
 
-        public async Task UploadProfilePictureAsync(ProfilePicture profilePicture)
+        public async Task UploadProfilePictureAsync(ProfilePicture profilePicture, string userId, string uploadsFolder)
         {
+            var existingProfilePicture = await _context.ProfilePicture.FirstOrDefaultAsync(u => u.UserId == userId);
+
+            if (existingProfilePicture != null)
+            {
+                // If a profile picture already exists
+                var filePath = Path.Combine(uploadsFolder, existingProfilePicture.FileName);
+
+                _context.Remove(existingProfilePicture);
+                if (File.Exists(filePath))
+                {
+                    // Delete the file
+                    File.Delete(filePath);
+                }
+            }
+
             _context.ProfilePicture.Add(profilePicture);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<string> GetProfilePicturePathAsync(string userId)
+        {
+            var profilePicture = await _context.ProfilePicture.FirstOrDefaultAsync(u => u.UserId == userId);
+
+            if (profilePicture == null || string.IsNullOrEmpty(profilePicture.FilePath))
+            {
+                return null; // Handle the case where the profile picture is not found
+            }
+
+            return profilePicture.FilePath;
         }
     }
 }

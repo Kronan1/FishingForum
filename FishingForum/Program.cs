@@ -20,6 +20,8 @@ namespace FishingForum
                 .AddSignInManager<SignInManager<FishingForumUser>>()
                 .AddEntityFrameworkStores<FishingForumContext>();
 
+            builder.Services.AddHttpClient();
+
 
 
 

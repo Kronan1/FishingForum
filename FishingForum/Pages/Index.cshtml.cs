@@ -31,7 +31,7 @@ namespace FishingForum.Pages
         private async Task Initialize()
         {
 
-            Categories ??= await _userManager.GetCategoriesAsync();
+            Categories ??= await _userManager.GetCategoriesFromApiAsync();
             SubCategories = new List<SubCategory>();
 
             foreach (var category in Categories)

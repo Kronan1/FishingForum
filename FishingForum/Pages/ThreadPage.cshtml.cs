@@ -82,7 +82,7 @@ namespace FishingForum.Pages
 
             AnonymizedUsers = await _userManager.GetAnonymizedUsersAsync(userIdList);
 
-            
+            var test = 0;
         }
 
         public async Task<IActionResult> OnPostAsync()

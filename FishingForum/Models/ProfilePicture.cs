@@ -21,5 +21,7 @@ namespace FishingForum.Models
         [ForeignKey("FishingForumUser")]
         public string UserId { get; set; }
         public virtual Areas.Identity.Data.FishingForumUser FishingForumUser { get; set; }
+
+        public string FilePath { get; set; }
     }
 }
