@@ -41,6 +41,7 @@ namespace FishingForum.DAL
 
         public async Task<List<Category>> GetCategoriesFromApiAsync()
         {
+            // HÄMTAR FRÅN API
             List<Category> Data = new();
             var apiUrl = "https://fishingforumapi.azurewebsites.net/api/Category";
             var response = await _httpClient.GetAsync(apiUrl);

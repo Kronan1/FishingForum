@@ -1,10 +1,12 @@
 using FishingForum.DAL;
 using FishingForum.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FishingForum.Pages.AdminPages
 {
+    [Authorize(Roles = "Admin")]
     public class AdminReportedMessagesModel : PageModel
     {
         private readonly AdminManager _adminManager;

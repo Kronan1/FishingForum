@@ -3,15 +3,26 @@
 @{
 }
 
-<table>
-    @foreach (var message in Model.Messages)
-    {
-        <tr>
-            <td>@message.Text</td>
-            <td>@Model.AnonymizedUsers.FirstOrDefault(u => u.Id == message.SenderId).Alias</td>
-            <td>@message.DateCreated</td>
-            <td><a asp-route-senderId="@message.SenderId">Reply</a></td>
-            <td><a asp-route-deleteId="@message.Id">Delete</a></td>
-        </tr>
-    }
-</table>
+
+@foreach (var message in Model.Messages)
+{
+    <div class="row g-2 categories">
+
+        <div class="d-flex align-items-center post">
+
+            <div class="postUser border-end col-sm-2">
+                <div><img src="@Model.AnonymizedUsers.FirstOrDefault(u => u.Id == message.SenderId).ProfilePicture" alt="Profile Picture" /></div>
+                <div>@Model.AnonymizedUsers.FirstOrDefault(u => u.Id == message.SenderId).Alias</div>
+            </div>
+            <div class="postText col-sm">@message.Text</div>
+        </div>
+
+        <div class="postFooter d-flex justify-content-between align-items-center card-footer">
+            <div>@message.DateCreated</div>
+            <div class="d-flex ms-auto">
+                <div class="card-link"><a asp-route-senderId="@message.SenderId">Reply</a></div>
+                <div class="card-link"><a asp-route-deleteId="@message.Id">Delete</a></div>
+            </div>
+        </div>
+    </div>
+}

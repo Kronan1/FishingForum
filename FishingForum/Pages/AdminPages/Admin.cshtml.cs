@@ -1,10 +1,12 @@
 using FishingForum.DAL;
 using FishingForum.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FishingForum.Pages.AdminPages
 {
+    //[Authorize(Roles = "Admin")]
     public class AdminModel : PageModel
     {
         private readonly AdminManager _adminManager;
@@ -23,7 +25,7 @@ namespace FishingForum.Pages.AdminPages
         }
 
 
-        public async Task<IActionResult> OnGetAsync(int editCategoryId, int deleteCategoryId, bool seeReported)
+        public async Task<IActionResult> OnGetAsync(int editCategoryId, int deleteCategoryId, bool seeReported, bool roleManager)
         {
             await Initialize();
 
@@ -51,6 +53,11 @@ namespace FishingForum.Pages.AdminPages
             if (seeReported)
             {
                 return RedirectToPage("/AdminPages/AdminReportedMessages");
+            }
+
+            if (roleManager)
+            {
+                return RedirectToPage("/AdminPages/RolePage");
             }
 
             await Initialize();

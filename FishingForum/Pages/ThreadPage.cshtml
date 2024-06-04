@@ -23,13 +23,13 @@
 
 @foreach (var post in Model.Posts)
 {
-    <div class="card">
-        <div class="d-flex align-items-center">
-            <div class="postUser card-body border-end">
-            <div><img src="@Model.AnonymizedUsers.FirstOrDefault(u => u.Id == post.UserId).ProfilePicture" alt="Profile Picture" /></div>
-            <div>@Model.AnonymizedUsers.FirstOrDefault(u => u.Id == post.UserId).Alias</div>
+    <div class="row g-2 categories">
+        <div class="d-flex align-items-center post">
+            <div class="postUser border-end col-sm-2">
+                <div><img src="@Model.AnonymizedUsers.FirstOrDefault(u => u.Id == post.UserId).ProfilePicture" alt="Profile Picture" /></div>
+                <div>@Model.AnonymizedUsers.FirstOrDefault(u => u.Id == post.UserId).Alias</div>
             </div>
-            <div class="postText card-body ">@post.Text</div>
+            <div class="postText col-sm">@post.Text</div>
         </div>
 
 

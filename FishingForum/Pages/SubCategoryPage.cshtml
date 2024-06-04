@@ -13,15 +13,32 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    <h3><a asp-route-createthreadId="@Model.SubCategory.Id">Ny Tråd</a></h3>
+
 }
 
-<table>
+<div class="">
+    <div class="col-7 mx-auto category ">
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <h3 class="text-center link"><a asp-route-createthreadId="@Model.SubCategory.Id">Skapa ny tråd</a></h3>
+        }
+    </div>
+    @foreach (var thread in Model.Threads)
+    {
+
+        <div class="col-7 mx-auto subCategory">
+            <a asp-route-threadId="@thread.Id" class="link px-4 text-black"> @thread.Title</a>
+        </div>
+
+    }
+</div>
+
+@* <table>
     @foreach (var thread in Model.Threads)
     {
         <tr>
-            <td><a asp-route-threadId="@thread.Id"> @thread.Title</a></td>
+            <td><a asp-route-threadId="@thread.Id" class="link px-4 text-black"> @thread.Title</a></td>
         </tr>
 
     }
-</table>
+</table> *@

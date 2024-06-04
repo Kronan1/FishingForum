@@ -15,25 +15,45 @@ html {
 html {
     position: relative;
     min-height: 100%;
+    
 }
 
 body {
     margin-bottom: 60px;
+    background-color: #b3b4bd;
+}
+
+.colorMain {
+    background-color: #050a44;
+}
+
+.colorAccent {
+    background-color: #b3b4bd;
 }
 
 .post {
+    min-height: 20vh;
+    background-color: #EEEEEE;
+
 }
 
 .postUser {
-    background-color: #EEEEEE;
+    padding: 10px;
+    height: 100%;
+    text-align: center;
 }
 
 .postText {
-    background-color: #EEEEEE;
+
+    height: 100%;
+    padding: 10px;
+    min-height: 60px;
+    
 }
 
 .postFooter {
     background-color: #686D76;
+    margin-bottom: 30px;
 }
 
 .postFooter a {
@@ -43,3 +63,24 @@ body {
 .postFooter a:hover {
     color: #C4FB6D;
 }
+
+.category {
+    background-color: #a8a8b0ff;
+    color: #2c2e3a;
+    min-height: 3vh;
+    font-size: 2vh;
+}
+
+.subCategory, subCategory a {
+    background-color: #c8c8d5ff;
+    color: #2c2e3a;
+    border: solid;
+    border-width: 1px;
+}
+
+
+
+.link {
+    text-decoration: none;
+}
+

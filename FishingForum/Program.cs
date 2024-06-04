@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using FishingForum.Data;
 using FishingForum.Areas.Identity.Data;
 using FishingForum.DAL;
+using Microsoft.Extensions.Options;
 namespace FishingForum
 {
     public class Program
@@ -22,7 +23,13 @@ namespace FishingForum
 
             builder.Services.AddHttpClient();
 
+            builder.Services.AddAuthorizationBuilder()
+                .AddPolicy("NeedsAdmin", policy => policy.RequireRole("Admin"));
 
+            builder.Services.AddRazorPages(options =>
+            {
+                options.Conventions.AuthorizeFolder("/AdminPages", "NeedsAdmin");
+            });
 
 
             builder.Services.AddScoped<AdminManager>();

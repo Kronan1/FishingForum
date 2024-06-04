@@ -1,24 +1,29 @@
 ﻿@page
+@using FishingForum.Areas.Identity.Data
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<FishingForumUser> userManager
 @model FishingForum.Pages.AdminPages.RolePageModel
 @{
 }
 
+
+
 <table class="table">
-    <tr>
 
-        <th>Username</th>
-        @foreach (var role in Model.Roles)
-        {
-            <th>@role.Name</th>
-        }
-
-    </tr>
-
-    @foreach (var user in Model.Users)
+    @foreach (var user in Model.UserRoles)
     {
         <tr>
             <td>@user.Alias</td>
-            <td></td>
+            <td>
+                <form method="post" asp-page-handler="UpdateRole">
+                    <input type="hidden" name="UserId" value="@user.Id" />
+                    @foreach (var role in Model.Roles)
+                    {
+                        <input type="radio" name="RoleId" value="@role.Id" @(user.Role == role.Name ? "checked" : "" )/> @role.Name
+                    }
+                    <input type="submit" value="Update" class="btn btn-primary" />
+                </form>
+            </td>
         </tr>
     }
 </table>

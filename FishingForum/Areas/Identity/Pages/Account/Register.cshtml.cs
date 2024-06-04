@@ -30,13 +30,15 @@ namespace FishingForum.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<FishingForumUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public RegisterModel(
             UserManager<FishingForumUser> userManager,
             IUserStore<FishingForumUser> userStore,
             SignInManager<FishingForumUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -44,6 +46,7 @@ namespace FishingForum.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _roleManager = roleManager;
         }
 
         /// <summary>
@@ -120,6 +123,7 @@ namespace FishingForum.Areas.Identity.Pages.Account
                 var user = CreateUser();
                 user.Alias = Input.Alias;
 
+
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
@@ -127,6 +131,14 @@ namespace FishingForum.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    // Ensure roles exist
+                    await EnsureRolesExistAsync();
+
+                    // Assign the user to a role
+                    await _userManager.AddToRoleAsync(user, "User");
+
+
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -181,6 +193,19 @@ namespace FishingForum.Areas.Identity.Pages.Account
                 throw new NotSupportedException("The default UI requires a user store with email support.");
             }
             return (IUserEmailStore<FishingForumUser>)_userStore;
+        }
+
+        private async Task EnsureRolesExistAsync()
+        {
+            string[] roleNames = { "Admin", "User" }; // Add roles as needed
+            foreach (var roleName in roleNames)
+            {
+                if (!await _roleManager.RoleExistsAsync(roleName))
+                {
+                    await _roleManager.CreateAsync(new IdentityRole(roleName));
+                }
+            }
+
         }
     }
 }

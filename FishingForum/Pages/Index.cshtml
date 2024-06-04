@@ -11,20 +11,20 @@
 
 @foreach (var category in Model.Categories)
 {
-    <table>
-        <tr class="d-lg-table-row">
-            <th>@category.Name</th>
-        </tr>
+    <div class="">
+        <div class="col-7 mx-auto category">
+            <div class="px-2">@category.Name</div>
+        </div>
         @foreach (var subCategory in Model.SubCategories)
         {
             @if (subCategory.CategoryId == category.Id)
             {
-                <tr>
-                    <td><a asp-route-subCategoryId="@subCategory.Id"> @subCategory.Name</a></td>
-                </tr>
+                <div class="col-7 mx-auto subCategory">
+                    <a asp-route-subCategoryId="@subCategory.Id" class="link px-4 text-black"> @subCategory.Name</a>
+                </div>
             }
         }
-    </table>
+    </div>
 }
 
 

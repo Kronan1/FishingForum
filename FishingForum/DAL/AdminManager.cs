@@ -1,6 +1,8 @@
 ﻿using Elfie.Serialization;
+using FishingForum.Areas.Identity.Data;
 using FishingForum.Data;
 using FishingForum.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Principal;
 
@@ -8,9 +10,10 @@ namespace FishingForum.DAL
 {
     public class AdminManager : UserManager
     {
-        public AdminManager(FishingForumContext context, ILogger<UserManager> logger, HttpClient httpClient) : base(context, logger, httpClient)
+        private readonly UserManager<FishingForumUser> _userManagerIdentity;
+        public AdminManager(FishingForumContext context, ILogger<UserManager> logger, HttpClient httpClient, UserManager<FishingForumUser> userManagerIdentity) : base(context, logger, httpClient)
         {
-
+            _userManagerIdentity = userManagerIdentity;
         }
 
         public async Task AddCategory(Category category)
@@ -61,6 +64,27 @@ namespace FishingForum.DAL
             {
                 _context.Post.Remove(post);
                 _context.SaveChanges();
+            }
+        }
+
+        public async Task UpdateRoleOfUser(string userId, string roleId)
+        {
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userId);
+
+            if (user != null)
+            {
+                var role = await _context.Roles.FindAsync(roleId);
+
+                if (role != null)
+                {
+                    // Remove user from all existing roles
+                    var userRoles = await _userManagerIdentity.GetRolesAsync(user);
+                    await _userManagerIdentity.RemoveFromRolesAsync(user, userRoles);
+
+                    // Assign the user to the selected role
+                    await _userManagerIdentity.AddToRoleAsync(user, role.Name);
+                    await _context.SaveChangesAsync();
+                }
             }
         }
 

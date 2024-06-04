@@ -7,23 +7,22 @@
 @inject SignInManager<Areas.Identity.Data.FishingForumUser> SignInManager
 @inject UserManager<Areas.Identity.Data.FishingForumUser> UserManager
 
-<div class="text-center">
+<div class="text-center pb-3">
     <h1 class="display-6">Members</h1>
 </div>
 
 
 
-<table>
-    @foreach (var user in Model.AnonymizedUsers)
-    {
-        <tr>
 
-            <td>@user.Alias</td>
-            @if (SignInManager.IsSignedIn(User))
-            {
-                <td><a asp-route-userId="@user.Id">PM</a></td>
-            }
-        </tr>
+@foreach (var user in Model.AnonymizedUsers)
+{
+    <div class="col-7 mx-auto d-flex justify-content-between align-items-center pt-2">
+        <div>@user.Alias</div>
 
-    }
-</table>
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <a asp-route-userId="@user.Id" class="link">Skicka meddelande</a>
+        }
+    </div>
+
+}

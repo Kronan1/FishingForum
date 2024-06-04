@@ -1,11 +1,13 @@
 using FishingForum.DAL;
 using FishingForum.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Runtime.CompilerServices;
 
 namespace FishingForum.Pages
 {
+    [Authorize(Roles = "Admin")]
     public class EditCategoryModel : PageModel
     {
         private readonly AdminManager _adminManager;

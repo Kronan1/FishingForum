@@ -1,5 +1,6 @@
 using FishingForum.DAL;
 using FishingForum.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -8,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace FishingForum.Pages
 {
+    [Authorize(Roles = "Admin")]
     public class EditSubCategoryModel : PageModel
     {
         private readonly AdminManager _adminManager;
