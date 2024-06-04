@@ -4,6 +4,7 @@ using FishingForum.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Hosting;
 
 namespace FishingForum.Pages
 {
@@ -11,8 +12,10 @@ namespace FishingForum.Pages
     {
         private readonly UserManager _userManager;
         private readonly SignInManager<FishingForumUser> _signInManager;
+        private readonly UserManager<FishingForumUser> _userManagerIdentity;
         public Models.Thread Thread { get; set; }
         public List<Post> Posts { get; set; }
+        public List<PostInteraction> Interactions { get; set; }
         public List<AnonymizedUser> AnonymizedUsers { get; set; }
         [BindProperty]
         public string NewPost { get; set; }
@@ -22,13 +25,14 @@ namespace FishingForum.Pages
 
         public bool Reported { get; set; }
 
-        public ThreadPageModel(SignInManager<FishingForumUser> signInManager, DAL.UserManager userManager)
+        public ThreadPageModel(SignInManager<FishingForumUser> signInManager, DAL.UserManager userManager, UserManager<FishingForumUser> userManagerIdentity)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _userManagerIdentity = userManagerIdentity;
             AnonymizedUsers = new List<AnonymizedUser>();
         }
-        public async Task<IActionResult> OnGetAsync(Guid threadId, Guid postId, Guid reportId)
+        public async Task<IActionResult> OnGetAsync(Guid threadId, Guid postId, Guid reportId, Guid likeId, Guid dislikeId)
         {
             if (postId != Guid.Empty)
             {
@@ -55,8 +59,43 @@ namespace FishingForum.Pages
                     await Initialize(post.ThreadId);
                     ThreadId = post.ThreadId;
                     Reported = true;
+                    
+                }
+                return Page();
+            }
+
+            if (likeId != Guid.Empty)
+            {
+                var post = await _userManager.GetPostAsync(likeId);
+                if (post != null)
+                {
+                    var userId = _userManagerIdentity.GetUserId(User);
+                    if (!string.IsNullOrEmpty(userId))
+                    {
+                        await _userManager.AddInteraction(likeId, userId, "Like");
+                    }
+                    await Initialize(post.ThreadId);
+                    ThreadId = post.ThreadId;
                     return Page();
                 }
+            }
+
+            if (dislikeId != Guid.Empty)
+            {
+                var post = await _userManager.GetPostAsync(dislikeId);
+                if (post != null)
+                {
+                    var userId = _userManagerIdentity.GetUserId(User);
+                    if (!string.IsNullOrEmpty(userId))
+                    {
+                        await _userManager.AddInteraction(dislikeId, userId, "Dislike");
+                    }
+                    await Initialize(post.ThreadId);
+                    ThreadId = post.ThreadId;
+                    return Page();
+                }
+
+                return Page();
             }
 
             await Initialize(threadId);
@@ -70,6 +109,8 @@ namespace FishingForum.Pages
         {
             Thread = await _userManager.GetThreadAsync(threadId);
             Posts = await _userManager.GetPostsAsync(threadId);
+            Interactions = await _userManager.GetInteractionsAsync(Posts);
+
             
             List<string> userIdList = new List<string>();
             foreach (var post in Posts)
@@ -82,7 +123,6 @@ namespace FishingForum.Pages
 
             AnonymizedUsers = await _userManager.GetAnonymizedUsersAsync(userIdList);
 
-            var test = 0;
         }
 
         public async Task<IActionResult> OnPostAsync()

@@ -66,4 +66,6 @@ public class FishingForumContext : IdentityDbContext<FishingForumUser>
 public DbSet<FishingForum.Models.Message> Message { get; set; } = default!;
 
 public DbSet<FishingForum.Models.ProfilePicture> ProfilePicture { get; set; } = default!;
+
+public DbSet<FishingForum.Models.PostInteraction> PostInteraction { get; set; } = default!;
 }

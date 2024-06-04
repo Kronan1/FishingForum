@@ -312,7 +312,7 @@ namespace FishingForum.DAL
             if (message != null)
             {
                 _context.Message.Remove(message);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
 
@@ -347,6 +347,47 @@ namespace FishingForum.DAL
             }
 
             return profilePicture.FilePath;
+        }
+
+        public async Task AddInteraction(Guid postId, string userId, string type)
+        {
+            var existingInteraction = await _context.PostInteraction.FirstOrDefaultAsync(i => i.PostId == postId && i.UserId == userId);
+
+            if (existingInteraction != null)
+            {
+                if (existingInteraction.Type == type)
+                {
+                    _context.PostInteraction.Remove(existingInteraction);
+                }
+
+                existingInteraction.Type = type;
+
+            }
+            else
+            {
+                var newInteraction = new PostInteraction { PostId = postId, UserId = userId, Type = type, DateCreated = DateTime.Now };
+                _context.PostInteraction.Add(newInteraction);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return;
+
+        }
+
+        public async Task<List<PostInteraction>> GetInteractionsAsync(List<Post> posts)
+        {
+            List<PostInteraction> interactions = new();
+            foreach (var post in posts)
+            {
+                var interactionsPerPost = await _context.PostInteraction.Where(i => i.PostId == post.Id).ToListAsync();
+                foreach (var interaction in interactionsPerPost)
+                {
+                    interactions.Add(interaction);
+                }
+            }
+
+            return interactions;
         }
     }
 }
