@@ -84,6 +84,7 @@ namespace FishingForum.Pages
             if (!UpdatedSubCategory.Name.IsOnlyLetters())
             {
                 // TODO Reassign original name if name is Invalid
+                // TODO Allow whitespace
                 ErrorMessage = "Only letters allowed in name";
                 SubCategory = await _adminManager.GetSubCategoryAsync(UpdatedSubCategory.Id);
                 UpdatedSubCategory.Name = SubCategory.Name;
