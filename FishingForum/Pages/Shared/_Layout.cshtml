@@ -21,10 +21,14 @@
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/UsersPage">Members</a>
-                        </li>                  
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/MessagePage">Messages</a>
                         </li>
+                        @if (User.IsInRole("Admin, User"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/MessagePage">Messages</a>
+                            </li>
+                        }
+                        
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
